@@ -67,11 +67,16 @@ public class WebSocketEndpoint {
                 return;
             }
 
+            WebSocket socket = new WebSocket();
+            socket.setIdentifier(identifier);
+            socket.setSession(session);
             WebSocketManager websocketManager = getWebSocketManager();
+            socket.setWebSocketManager(websocketManager);
 
-            //像刷新这种，id一样，session不一样，后面的覆盖前面的
-            websocketManager.put(identifier , session);
+            websocketManager.put(identifier , socket);
 
+            //开启心跳监测
+            socket.beginCheck();
         } catch (Exception e) {
             logger.error(e.getMessage() , e);
         }
@@ -87,6 +92,10 @@ public class WebSocketEndpoint {
         if(webSocketManager.isPing(identifier , message)){
             String pong = webSocketManager.pong(identifier, message);
             WebSocketUtil.sendMessage(session, pong);
+            WebSocket webSocket = webSocketManager.get(identifier);
+            if(null != webSocket){
+                webSocket.keepAlive();
+            }
             return;
         }
         //收到其他消息的时候

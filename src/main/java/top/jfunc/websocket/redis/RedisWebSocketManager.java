@@ -2,6 +2,7 @@ package top.jfunc.websocket.redis;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import top.jfunc.websocket.WebSocket;
 import top.jfunc.websocket.memory.MemWebSocketManager;
 import top.jfunc.websocket.redis.action.BroadCastAction;
 import top.jfunc.websocket.redis.action.RemoveAction;
@@ -9,7 +10,6 @@ import top.jfunc.websocket.redis.action.SendMessageAction;
 import top.jfunc.websocket.utils.JsonUtil;
 import top.jfunc.websocket.utils.WebSocketUtil;
 
-import javax.websocket.Session;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,8 +33,8 @@ public class RedisWebSocketManager extends MemWebSocketManager {
 
 
     @Override
-    public void put(String identifier, Session session) {
-        super.put(identifier, session);
+    public void put(String identifier, WebSocket webSocket) {
+        super.put(identifier, webSocket);
         //在线数量加1
         countChange(1);
     }
@@ -62,10 +62,10 @@ public class RedisWebSocketManager extends MemWebSocketManager {
 
     @Override
     public void sendMessage(String identifier, String message) {
-        Session session = get(identifier);
+        WebSocket webSocket = get(identifier);
         //本地能找到就直接发
-        if(null != session){
-            WebSocketUtil.sendMessage(session , message);
+        if(null != webSocket){
+            WebSocketUtil.sendMessage(webSocket.getSession() , message);
             return;
         }
 

@@ -1,12 +1,12 @@
 package top.jfunc.websocket.memory;
 
+import top.jfunc.websocket.WebSocket;
 import top.jfunc.websocket.WebSocketCloseEvent;
 import top.jfunc.websocket.WebSocketConnectEvent;
 import top.jfunc.websocket.WebSocketManager;
 import top.jfunc.websocket.utils.SpringContextHolder;
 import top.jfunc.websocket.utils.WebSocketUtil;
 
-import javax.websocket.Session;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,16 +17,16 @@ public class MemWebSocketManager implements WebSocketManager {
     /**
      * 因为全局只有一个 WebSocketManager ，所以才敢定义为非static
      */
-    private final Map<String, Session> connections = new ConcurrentHashMap<>(100);
+    private final Map<String, WebSocket> connections = new ConcurrentHashMap<>(100);
 
     @Override
-    public Session get(String identifier) {
+    public WebSocket get(String identifier) {
         return connections.get(identifier);
     }
 
     @Override
-    public void put(String identifier, Session session) {
-        connections.put(identifier , session);
+    public void put(String identifier, WebSocket webSocket) {
+        connections.put(identifier , webSocket);
         //发送连接事件
         SpringContextHolder.getApplicationContext().publishEvent(new WebSocketConnectEvent(identifier));
     }
@@ -40,23 +40,23 @@ public class MemWebSocketManager implements WebSocketManager {
 
 
     @Override
-    public Map<String, Session> localWebSocketMap() {
+    public Map<String, WebSocket> localWebSocketMap() {
         return connections;
     }
 
     @Override
     public void sendMessage(String identifier, String message) {
-        Session session = get(identifier);
-        if(null == session){throw new RuntimeException("identifier 不存在");}
+        WebSocket webSocket = get(identifier);
+        if(null == webSocket){throw new RuntimeException("identifier 不存在");}
 
-        WebSocketUtil.sendMessage(session , message);
+        WebSocketUtil.sendMessage(webSocket.getSession() , message);
     }
 
     @Override
     public void broadcast(String message) {
         localWebSocketMap().values().forEach(
-                session -> WebSocketUtil.sendMessage(
-                        session , message));
+                webSocket -> WebSocketUtil.sendMessage(
+                        webSocket.getSession() , message));
     }
 
     @Override
