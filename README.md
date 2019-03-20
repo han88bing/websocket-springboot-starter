@@ -58,3 +58,10 @@ public class WebSocketConfig {
     }*/
 }
 ```
+
+
+新增三个配置项开启心跳监测
+
+- webSocket.heartCheck.enabled=true
+- webSocket.heartCheck.timeSpan=1000
+- webSocket.heartCheck.errorToleration=30
