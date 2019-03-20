@@ -1,6 +1,5 @@
 package top.jfunc.websocket;
 
-import javax.websocket.Session;
 import java.util.Map;
 
 /**
@@ -18,14 +17,14 @@ public interface WebSocketManager {
      * @param identifier 标识
      * @return WebSocket
      */
-    Session get(String identifier);
+    WebSocket get(String identifier);
 
     /**
      * 放入一个 websocket session
      * @param identifier 标识
      * @param webSocket websocket
      */
-    void put(String identifier, Session webSocket);
+    void put(String identifier, WebSocket webSocket);
 
     /**
      * 删除
@@ -37,7 +36,7 @@ public interface WebSocketManager {
      * 获取当前机器上的保存的WebSocket
      * @return WebSocket Map
      */
-    Map<String , Session> localWebSocketMap();
+    Map<String , WebSocket> localWebSocketMap();
 
     /**
      * 统计所有在线人数

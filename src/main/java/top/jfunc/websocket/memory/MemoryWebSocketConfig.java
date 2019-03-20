@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import top.jfunc.websocket.WebSocketManager;
+import top.jfunc.websocket.config.WebSocketHeartBeatChecker;
 import top.jfunc.websocket.utils.SpringContextHolder;
 
 /**
@@ -25,5 +26,11 @@ public class MemoryWebSocketConfig {
     @ConditionalOnMissingBean(name = WebSocketManager.WEBSOCKET_MANAGER_NAME)
     public WebSocketManager webSocketManager() {
         return new MemWebSocketManager();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public WebSocketHeartBeatChecker webSocketHeartBeatChecker(){
+        return new WebSocketHeartBeatChecker();
     }
 }

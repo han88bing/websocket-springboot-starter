@@ -7,6 +7,7 @@ import top.jfunc.websocket.utils.SpringContextHolder;
 import top.jfunc.websocket.utils.WebSocketUtil;
 
 import javax.websocket.*;
+import java.util.Date;
 
 /**
  * NOTE: Nginx反向代理要支持WebSocket，需要配置几个header，否则连接的时候就报404
@@ -69,8 +70,12 @@ public class WebSocketEndpoint {
 
             WebSocketManager websocketManager = getWebSocketManager();
 
+            WebSocket webSocket = new WebSocket();
+            webSocket.setIdentifier(identifier);
+            webSocket.setSession(session);
+            webSocket.setLastHeart(new Date());
             //像刷新这种，id一样，session不一样，后面的覆盖前面的
-            websocketManager.put(identifier , session);
+            websocketManager.put(identifier , webSocket);
 
         } catch (Exception e) {
             logger.error(e.getMessage() , e);
@@ -87,6 +92,11 @@ public class WebSocketEndpoint {
         if(webSocketManager.isPing(identifier , message)){
             String pong = webSocketManager.pong(identifier, message);
             WebSocketUtil.sendMessage(session, pong);
+            WebSocket webSocket = webSocketManager.get(identifier);
+            //更新心跳时间
+            if(null != webSocket){
+                webSocket.setLastHeart(new Date());
+            }
             return;
         }
         //收到其他消息的时候

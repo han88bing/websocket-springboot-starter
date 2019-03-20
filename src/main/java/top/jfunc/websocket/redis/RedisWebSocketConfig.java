@@ -12,6 +12,7 @@ import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import top.jfunc.websocket.WebSocketManager;
+import top.jfunc.websocket.config.WebSocketHeartBeatChecker;
 import top.jfunc.websocket.redis.action.ActionConfig;
 import top.jfunc.websocket.utils.SpringContextHolder;
 
@@ -70,5 +71,12 @@ public class RedisWebSocketConfig {
     @ConditionalOnMissingBean
     public SpringContextHolder springContextHolder(){
         return new SpringContextHolder();
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean
+    public WebSocketHeartBeatChecker webSocketHeartBeatChecker(){
+        return new WebSocketHeartBeatChecker();
     }
 }

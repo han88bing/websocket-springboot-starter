@@ -1,0 +1,47 @@
+package top.jfunc.websocket.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import top.jfunc.websocket.WebSocketManager;
+
+import java.util.List;
+
+
+/**
+ * @author xiongshiyan
+ * 这是一个模板
+ */
+@Configuration
+@EnableScheduling
+@ConditionalOnProperty(prefix = "spring.runner.websocket.heartCheck" , name = "enabled" , havingValue = "true")
+public class WebSocketSchedulingConfig {
+
+    @Value("${webSocket.heartCheck.timeSpan:10000}")
+    private long timeSpan;
+    @Value("${webSocket.heartCheck.errorToleration:30}")
+    private int errorToleration;
+
+    /**
+     * 按照类型注入多个WebSocketManager
+     */
+    @Autowired
+    private List<WebSocketManager> webSocketManagers;
+    @Autowired
+    private WebSocketHeartBeatChecker webSocketHeartBeatChecker;
+    /**
+     * 定时检测 WebSocket 的心跳
+     */
+    @Scheduled(cron = "${webSocket.heartCheck.trigger}")
+    public void webSocketHeartCheckJob() {
+        webSocketManagers.forEach(webSocketManager ->
+            webSocketHeartBeatChecker.check(webSocketManager , timeSpan , errorToleration , (webSocket)->{
+                //数据库操作...
+            })
+        );
+
+    }
+}
