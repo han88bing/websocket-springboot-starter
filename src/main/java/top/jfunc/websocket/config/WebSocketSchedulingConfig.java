@@ -12,12 +12,16 @@ import java.util.List;
 
 
 /**
+ * 只需要配置一下三个选项即可开启心跳监测
+ *   webSocket.heartCheck.enabled=true
+     webSocket.heartCheck.timeSpan=1000
+     webSocket.heartCheck.errorToleration=30
  * @author xiongshiyan
  * 这是一个模板
  */
 @Configuration
 @EnableScheduling
-@ConditionalOnProperty(prefix = "spring.runner.websocket.heartCheck" , name = "enabled" , havingValue = "true")
+@ConditionalOnProperty(prefix = "webSocket.heartCheck" , name = "enabled" , havingValue = "true")
 public class WebSocketSchedulingConfig {
 
     @Value("${webSocket.heartCheck.timeSpan:10000}")
