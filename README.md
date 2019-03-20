@@ -59,7 +59,7 @@ public class WebSocketConfig {
 }
 ```
 
-
+关于心跳监测，模仿 `top.jfunc.websocket.config.WebSocketSchedulingConfig` 自己配置一下即可
 新增三个配置项开启心跳监测
 
 - webSocket.heartCheck.enabled=true

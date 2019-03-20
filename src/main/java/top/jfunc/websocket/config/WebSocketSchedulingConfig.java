@@ -8,8 +8,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import top.jfunc.websocket.WebSocketManager;
 
-import java.util.List;
-
 
 /**
  * 只需要配置一下三个选项即可开启心跳监测
@@ -17,7 +15,7 @@ import java.util.List;
      webSocket.heartCheck.timeSpan=1000
      webSocket.heartCheck.errorToleration=30
  * @author xiongshiyan
- * 这是一个模板
+ * 这是一个配置模板
  */
 @Configuration
 @EnableScheduling
@@ -29,11 +27,8 @@ public class WebSocketSchedulingConfig {
     @Value("${webSocket.heartCheck.errorToleration:30}")
     private int errorToleration;
 
-    /**
-     * 按照类型注入多个WebSocketManager
-     */
     @Autowired
-    private List<WebSocketManager> webSocketManagers;
+    private WebSocketManager webSocketManager;
     @Autowired
     private WebSocketHeartBeatChecker webSocketHeartBeatChecker;
     /**
@@ -41,11 +36,8 @@ public class WebSocketSchedulingConfig {
      */
     @Scheduled(cron = "${webSocket.heartCheck.trigger}")
     public void webSocketHeartCheckJob() {
-        webSocketManagers.forEach(webSocketManager ->
-            webSocketHeartBeatChecker.check(webSocketManager , timeSpan , errorToleration , (webSocket)->{
-                //数据库操作...
-            })
-        );
-
+        webSocketHeartBeatChecker.check(webSocketManager , timeSpan , errorToleration , (webSocket)->{
+            //数据库操作...
+        });
     }
 }

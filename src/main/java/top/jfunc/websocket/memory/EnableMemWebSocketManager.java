@@ -1,7 +1,6 @@
 package top.jfunc.websocket.memory;
 
 import org.springframework.context.annotation.Import;
-import top.jfunc.websocket.config.WebSocketSchedulingConfig;
 
 import java.lang.annotation.*;
 
@@ -12,6 +11,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@Import({MemoryWebSocketConfig.class , WebSocketSchedulingConfig.class})
+@Import({MemoryWebSocketConfig.class})
 public @interface EnableMemWebSocketManager {
 }
