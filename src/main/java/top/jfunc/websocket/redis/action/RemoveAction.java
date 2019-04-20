@@ -3,7 +3,6 @@ package top.jfunc.websocket.redis.action;
 import top.jfunc.json.impl.JSONObject;
 import top.jfunc.websocket.WebSocket;
 import top.jfunc.websocket.WebSocketManager;
-import top.jfunc.websocket.redis.DefaultRedisReceiver;
 
 import java.util.Map;
 
@@ -18,11 +17,11 @@ import java.util.Map;
 public class RemoveAction implements Action{
     @Override
     public void doMessage(WebSocketManager manager, JSONObject object) {
-        if(!object.containsKey(DefaultRedisReceiver.IDENTIFIER)){
+        if(!object.containsKey(IDENTIFIER)){
             return;
         }
 
-        String identifier = object.getString(DefaultRedisReceiver.IDENTIFIER);
+        String identifier = object.getString(IDENTIFIER);
 
         Map<String, WebSocket> localWebSocketMap = manager.localWebSocketMap();
         if(localWebSocketMap.containsKey(identifier)){

@@ -3,6 +3,8 @@
 #### 项目介绍
 websocket-springboot-starter to develop websocket
 
+使用时面向接口WebSocketManager，支持单机（基于内存）和集群（基于Redis的发布订阅）
+
 #### 软件架构
 1.基于springboot websocket 定制，主要完成的功能是WebSocket session的状态管理，具备单机和集群能力。
 2.可以定制自己的ServerEndPoint和WebSocketManager。

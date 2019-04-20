@@ -4,13 +4,13 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import top.jfunc.websocket.WebSocket;
 import top.jfunc.websocket.memory.MemWebSocketManager;
+import top.jfunc.websocket.redis.action.Action;
 import top.jfunc.websocket.redis.action.BroadCastAction;
 import top.jfunc.websocket.redis.action.RemoveAction;
 import top.jfunc.websocket.redis.action.SendMessageAction;
 import top.jfunc.websocket.utils.JsonUtil;
 import top.jfunc.websocket.utils.WebSocketUtil;
 
-import javax.websocket.Session;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,10 +47,10 @@ public class RedisWebSocketManager extends MemWebSocketManager {
             super.remove(identifier);
         }else {
             Map<String , Object> map = new HashMap<>(2);
-            map.put(DefaultRedisReceiver.ACTION , RemoveAction.class.getName());
-            map.put(DefaultRedisReceiver.IDENTIFIER , identifier);
+            map.put(Action.ACTION , RemoveAction.class.getName());
+            map.put(Action.IDENTIFIER , identifier);
             //在websocket频道上发布发送消息的消息
-            stringRedisTemplate.convertAndSend(CHANNEL , JsonUtil.serializeMap(map));
+            stringRedisTemplate.convertAndSend(getChannel() , JsonUtil.serializeMap(map));
         }
         //在线数量减1
         countChange(-1);
@@ -72,9 +72,9 @@ public class RedisWebSocketManager extends MemWebSocketManager {
 
 
         Map<String , Object> map = new HashMap<>(3);
-        map.put(DefaultRedisReceiver.ACTION , SendMessageAction.class.getName());
-        map.put(DefaultRedisReceiver.IDENTIFIER , identifier);
-        map.put("message" , message);
+        map.put(Action.ACTION , SendMessageAction.class.getName());
+        map.put(Action.IDENTIFIER , identifier);
+        map.put(Action.MESSAGE , message);
         //在websocket频道上发布发送消息的消息
         stringRedisTemplate.convertAndSend(getChannel() , JsonUtil.serializeMap(map));
     }
@@ -82,8 +82,8 @@ public class RedisWebSocketManager extends MemWebSocketManager {
     @Override
     public void broadcast(String message) {
         Map<String , Object> map = new HashMap<>(2);
-        map.put(DefaultRedisReceiver.ACTION , BroadCastAction.class.getName());
-        map.put("message" , message);
+        map.put(Action.ACTION , BroadCastAction.class.getName());
+        map.put(Action.MESSAGE , message);
         //在websocket频道上发布广播的消息
         stringRedisTemplate.convertAndSend(getChannel() , JsonUtil.serializeMap(map));
     }

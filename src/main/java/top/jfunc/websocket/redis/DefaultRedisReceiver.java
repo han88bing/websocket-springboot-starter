@@ -16,8 +16,6 @@ import java.util.concurrent.CountDownLatch;
  */
 public class DefaultRedisReceiver implements RedisReceiver{
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultRedisReceiver.class);
-    public static final String IDENTIFIER = "identifier";
-    public static final String ACTION     = "action";
 
     private CountDownLatch latch;
 
@@ -33,10 +31,10 @@ public class DefaultRedisReceiver implements RedisReceiver{
         LOGGER.info(message);
 
         JSONObject object = new JSONObject(message);
-        if(!object.containsKey(ACTION)){
+        if(!object.containsKey(Action.ACTION)){
             return;
         }
-        String actionName = object.getString(ACTION);
+        String actionName = object.getString(Action.ACTION);
         Action action = getAction(actionName);
         action.doMessage(getWebSocketManager() , object);
 

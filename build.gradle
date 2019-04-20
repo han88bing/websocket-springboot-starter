@@ -1,4 +1,4 @@
-def VERSION = '1.8.2'
+def VERSION = '1.8.2.0'
 def ARTIFACT_ID = 'websocket-springboot-starter'
 def GROUP_ID = 'top.jfunc.websocket'
 def TYPE = 'jar'
