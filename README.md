@@ -22,13 +22,13 @@ compile 'top.jfunc.websocket:websocket-springboot-starter:1.0'
 
 ```
 /**
- * 1.继承自 top.jfunc.websocket.WebSocketEndpoint
+ * 1.继承自 top.jfunc.websocket.BaseWebSocketEndpoint
  * 2.标注@Component @ServerEndpoint
  * @author xiongshiyan
  */
 @Component
 @ServerEndpoint(value ="/websocket/connect/{identifier}")
-public class WebSocketEndpoint extends top.jfunc.websocket.WebSocketEndpoint{
+public class WebSocketEndpoint extends top.jfunc.websocket.BaseWebSocketEndpoint{
 }
 ```
 

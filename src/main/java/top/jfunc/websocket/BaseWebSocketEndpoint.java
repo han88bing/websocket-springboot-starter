@@ -25,12 +25,12 @@ import java.util.Date;
  * 然后在方法中添加@OnOpen、@OnMessage、@OnClose、@OnError即可，这些方法中可以调用父类方法
  * @author xiongshiyan
  */
-public class WebSocketEndpoint {
+public abstract class BaseWebSocketEndpoint {
     /**
      * 路径标识：目前使用token来代表
      */
     public static final String IDENTIFIER = "identifier";
-    private static final Logger logger = LoggerFactory.getLogger(WebSocketEndpoint.class);
+    protected static final Logger logger = LoggerFactory.getLogger(BaseWebSocketEndpoint.class);
 
     /// 无法通过这种方式注入组件
     /*@Autowired
