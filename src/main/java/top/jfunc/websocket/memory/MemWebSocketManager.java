@@ -28,14 +28,16 @@ public class MemWebSocketManager implements WebSocketManager {
     public void put(String identifier, WebSocket webSocket) {
         connections.put(identifier , webSocket);
         //发送连接事件
-        SpringContextHolder.getApplicationContext().publishEvent(new WebSocketConnectEvent(identifier));
+        SpringContextHolder.getApplicationContext().publishEvent(new WebSocketConnectEvent(webSocket));
     }
 
     @Override
     public void remove(String identifier) {
-        connections.remove(identifier);
+        WebSocket removedWebSocket = connections.remove(identifier);
         //发送关闭事件
-        SpringContextHolder.getApplicationContext().publishEvent(new WebSocketCloseEvent(identifier));
+        if(null != removedWebSocket){
+            SpringContextHolder.getApplicationContext().publishEvent(new WebSocketCloseEvent(removedWebSocket));
+        }
     }
 
 
