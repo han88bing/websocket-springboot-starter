@@ -31,3 +31,6 @@
 /logs/spring.log
 /local.properties
 /gradle/
+/.gradle/
+!/.idea/
+/.idea/
