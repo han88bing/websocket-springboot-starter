@@ -1,4 +1,4 @@
-def VERSION = '1.8.2.1'
+def VERSION = '1.8.2.2'
 def ARTIFACT_ID = 'websocket-springboot-starter'
 def GROUP_ID = 'top.jfunc.websocket'
 def TYPE = 'jar'
@@ -36,14 +36,16 @@ sourceCompatibility = 1.8
 repositories {
     mavenLocal()
     mavenCentral()
+    jcenter()
 }
 dependencies {
+    compile group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
     compile("org.springframework.boot:spring-boot-starter-web:1.5.7.RELEASE")
-    compile("org.springframework.boot:spring-boot-starter-websocket:1.5.7.RELEASE")
+    //compile("org.springframework.boot:spring-boot-starter-websocket:1.5.7.RELEASE")
     compile("org.springframework.boot:spring-boot-starter-data-redis:1.5.7.RELEASE")
 
-    compile 'top.jfunc.common:utils:1.8.1'
-    compile 'top.jfunc.json:json-fastjson:1.8.1'
+    compile 'top.jfunc.common:utils:1.8.2.0'
+    compile 'top.jfunc.json:json-fastjson:1.8.3'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'org.hamcrest' , name: 'hamcrest-core',version: '1.3'
