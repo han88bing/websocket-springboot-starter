@@ -16,7 +16,7 @@ JFinal或者其他Web架构下开发WebSocket参见 https://gitee.com/xxssyyyyss
 
 #### 安装教程
 
-compile 'top.jfunc.websocket:websocket-springboot-starter:1.0'
+compile 'top.jfunc.websocket:websocket-springboot-starter:1.8.2.2'
 
 #### 使用说明
 
