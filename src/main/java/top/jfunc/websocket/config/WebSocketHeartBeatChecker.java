@@ -2,7 +2,7 @@ package top.jfunc.websocket.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.jfunc.websocket.TodoAtRemove;
+import top.jfunc.websocket.TodoAtRemoved;
 import top.jfunc.websocket.WebSocket;
 import top.jfunc.websocket.WebSocketManager;
 
@@ -23,12 +23,12 @@ public class WebSocketHeartBeatChecker {
      * @param webSocketManager 要检测的容器
      * @param timeSpan 检查到心跳更新时间大于这么毫秒就认为断开了（心跳时间）
      * @param errorTolerant 容忍没有心跳次数
-     * @param todoAtRemove 在删除的时候额外需要做的事情
+     * @param todoAtRemoved 在删除的时候额外需要做的事情
      */
     public void check(WebSocketManager webSocketManager ,
                                     long timeSpan ,
                                     int errorTolerant ,
-                                    TodoAtRemove todoAtRemove) {
+                                    TodoAtRemoved todoAtRemoved) {
         final long timeSpans = timeSpan * errorTolerant;
         Map<String, WebSocket> socketMap = webSocketManager.localWebSocketMap();
         Date now = new Date();
@@ -46,9 +46,10 @@ public class WebSocketHeartBeatChecker {
             for (WebSocket webSocket : toRemoves) {
                 //内存删了
                 socketMap.remove(webSocket.getIdentifier());
-                //额外比如还有数据库操作
-                todoAtRemove.todoWith(webSocket);
             }
+
+            //额外比如还有数据库操作
+            todoAtRemoved.todoWith(toRemoves);
         }
     }
 }
