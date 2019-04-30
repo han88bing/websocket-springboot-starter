@@ -2,7 +2,6 @@ package top.jfunc.websocket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.jfunc.common.utils.StrUtil;
 import top.jfunc.websocket.utils.SpringContextHolder;
 import top.jfunc.websocket.utils.WebSocketUtil;
 
@@ -64,7 +63,7 @@ public abstract class BaseWebSocketEndpoint {
 
     public void connect(String identifier, Session session) {
         try {
-            if(StrUtil.isBlank(identifier)){
+            if(null == identifier || "".equals(identifier)){
                 return;
             }
 
