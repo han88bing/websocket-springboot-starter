@@ -3,7 +3,100 @@
 #### 项目介绍
 websocket-springboot-starter to develop websocket
 
-使用时面向接口WebSocketManager，支持单机（基于内存）和集群（基于Redis的发布订阅）
+项目主要适用于服务端有数据变动想主动通知客户端场景，例如web网络聊天室，服务端数据变动通知web页面等。解决服务端和客户端的双向通信，可以代替ajax轮询技术。在服务端主动通知的场景下可以大幅度降低架构复杂度。
+在开发WebSocket的时候一般会遇到两个问题：
+
+1. 如何存储Session？
+2. 如何集群？
+
+我们一般都用一个`Map`来存储`Session`，你会在`@ServerEndPoint`类中见到类似`public static final Map<String , Session> sessions = new ConcurrentHashMap<>();`这样的代码。基于此也能开发，
+但是一个很大的问题就是不易扩展。基于此考虑，本项目将针对Session的处理的代码提成接口`WebSocketManager`，实现了单机版的和集群的，于是在两种场景下使用方式完全一样。
+```java
+public interface WebSocketManager {
+    /**
+     * 在容器中的名字
+     */
+    String WEBSOCKET_MANAGER_NAME  = "webSocketManager";
+    /**
+     * 根据标识获取websocket session
+     * @param identifier 标识
+     * @return WebSocket
+     */
+    WebSocket get(String identifier);
+
+    /**
+     * 放入一个 websocket session
+     * @param identifier 标识
+     * @param webSocket websocket
+     */
+    void put(String identifier, WebSocket webSocket);
+
+    /**
+     * 删除
+     * @param identifier 标识
+     */
+    void remove(String identifier);
+
+    /**
+     * 获取当前机器上的保存的WebSocket
+     * @return WebSocket Map
+     */
+    Map<String , WebSocket> localWebSocketMap();
+
+    /**
+     * 统计所有在线人数
+     * @return 所有在线人数
+     */
+    default int size(){
+        return localWebSocketMap().size();
+    }
+
+    /**
+     * 给某人发送消息
+     * @param identifier 标识
+     * @param message 消息
+     */
+    void sendMessage(String identifier, String message);
+
+    /**
+     * 广播
+     * @param message 消息
+     */
+    void broadcast(String message);
+
+    /**
+     * WebSocket接收到消息的函数调用
+     * @param identifier 标识
+     * @param message 消息内容
+     */
+    void onMessage(String identifier , String message);
+
+    /**
+     * 在OnMessage中判断是否是心跳,
+     * 从客户端的消息判断是否是ping消息
+     * @param identifier 标识
+     * @param message 消息
+     * @return 是否是ping消息
+     */
+    default boolean isPing(String identifier , String message){
+        return "ping".equalsIgnoreCase(message);
+    }
+
+    /**
+     * 返回心跳信息
+     * @param identifier 标识
+     * @param message 消息
+     * @return 返回的pong消息
+     */
+    default String pong(String identifier , String message){
+        return "pong";
+    }
+}
+```
+
+集群版的基于Redis的发布订阅功能，为什么要整这么复杂呢？不能像`HttpSession`一样直接存储到Redis吗？不能，因为WebSocket的`Session`无法序列化。`java.io.NotSerializableException`。
+
+使用时面向接口`WebSocketManager`，支持单机（基于内存）和集群（基于Redis的发布订阅）
 
 #### 软件架构
 1.基于springboot websocket 定制，主要完成的功能是WebSocket session的状态管理，具备单机和集群能力。
