@@ -10,7 +10,7 @@ websocket-springboot-starter to develop websocket
 2. 如何集群？
 
 我们一般都用一个`Map`来存储`Session`，你会在`@ServerEndPoint`类中见到类似`public static final Map<String , Session> sessions = new ConcurrentHashMap<>();`这样的代码。基于此也能开发，
-但是一个很大的问题就是不易扩展。基于此考虑，本项目将针对Session的处理的代码提成接口`WebSocketManager`，实现了单机版的和集群的，于是在两种场景下使用方式完全一样。
+但是一个很大的问题就是不易扩展。基于此考虑，本项目将针对`Session`的处理的代码提成接口`WebSocketManager`，实现了单机版的和集群的，于是在两种场景下使用方式完全一样。
 ```java
 public interface WebSocketManager {
     /**
