@@ -105,11 +105,11 @@ public interface WebSocketManager {
 JFinal或者其他Web架构下开发WebSocket参见 https://gitee.com/xxssyyyyssxx/jfinal-websocket
 
 
-使用方式参见 https://gitee.com/xxssyyyyssxx/websocket-demo
-
 #### 安装教程
 
-compile 'top.jfunc.websocket:websocket-springboot-starter:1.8.2.2'
+compile 'top.jfunc.websocket:websocket-springboot-starter:1.8.2.3'
+
+使用方式参见 https://gitee.com/xxssyyyyssxx/websocket-demo
 
 #### 使用说明
 
@@ -156,6 +156,16 @@ public class WebSocketConfig {
         return new WebSocketManager...();//继承自WebSocketManager
     }*/
 }
+```
+
+如果使用了 ** Nginx ** 作为负载均衡器，则需要在配置中添加
+
+```
+Nginx反向代理要支持WebSocket，需要配置几个header，否则连接的时候就报404
+       proxy_http_version 1.1;
+       proxy_set_header Upgrade $http_upgrade;
+       proxy_set_header Connection "upgrade";
+       proxy_read_timeout 3600s; //这个时间不长的话就容易断开连接
 ```
 
 关于心跳监测，模仿 `top.jfunc.websocket.config.WebSocketSchedulingConfig` 自己配置一下即可
